@@ -93,81 +93,10 @@ impl DisplayDriver {
 
     pub fn draw(&mut self, board: &mut Vec<Vec<Pixel>>, paused: bool) -> Result<(), String> {
         let on_color = if !paused { Color::WHITE } else { Color::RED };
+        // yes i know theyre the same, this will be expanded out further later
         let off_color = if !paused { Color::BLACK } else { Color::BLACK };
-        self.draw_board(board, on_color, off_color);
-        /* self.canvas.set_draw_color(Color::BLACK);
-        self.canvas.clear();
+        self.draw_board(board, on_color, off_color)?;
 
-        board.iter_mut().for_each(|row| {
-            row.iter_mut().for_each(|pixel| {
-                let color = if pixel.on { Color::WHITE } else { Color::BLACK };
-                self.canvas.set_draw_color(color);
-                let (x, y) = pixel.get_coords();
-
-                let _ = self.canvas.fill_rect(Rect::new(
-                    (x * self.scale) as i32,
-                    (y * self.scale) as i32,
-                    self.scale as u32,
-                    self.scale as u32,
-                ));
-            });
-        });
-
-        self.canvas.set_draw_color(Color::GRAY);
-        let x_squares_per_row = board[0].len();
-        let y_squares_per_row = board.len();
-
-        // Vertical lines
-        for x in 0..=x_squares_per_row {
-            let x_pos = x * self.scale;
-            self.canvas.draw_line(
-                Point::new(x_pos as i32, 0),
-                Point::new(x_pos as i32, HEIGHT as i32),
-            )?;
-        }
-
-        // Horizontal lines
-        for y in 0..=y_squares_per_row {
-            let y_pos = y * self.scale;
-            self.canvas.draw_line(
-                Point::new(0, y_pos as i32),
-                Point::new(WIDTH as i32, y_pos as i32),
-            )?;
-        }
-        self.canvas.present();*/
-        Ok(())
-    }
-
-    pub fn paused(&mut self, board: &mut Vec<Vec<Pixel>>) -> Result<(), String> {
-        self.draw_board(board, Color::RED, Color::BLACK);
-        /*let texture_creator = self.canvas.texture_creator();
-
-        // Load a font
-        let mut font = self
-            .ttf_context
-            .load_font("fonts/GeistMonoNerdFont-Regular.otf", 64)?;
-        font.set_style(sdl2::ttf::FontStyle::BOLD);
-
-        // render a surface, and convert it to a texture bound to the canvas
-        let surface = font
-            .render("PAUSED")
-            .blended(Color::RGBA(255, 0, 0, 255))
-            .map_err(|e| e.to_string())?;
-        let texture = texture_creator
-            .create_texture_from_surface(&surface)
-            .map_err(|e| e.to_string())?;
-
-        let TextureQuery { width, height, .. } = texture.query();
-        println!("w: {width}, h: {height}");
-
-        // If the example text is too big for the screen, downself.scale it (and center irregardless)
-        let cx = (WIDTH - width) / 2;
-        let cy = (HEIGHT - height) / 2;
-        let text_rect = Rect::new(cx as i32, cy as i32, width, height);
-
-        self.canvas.copy(&texture, None, Some(text_rect))?;
-        self.canvas.present();
-        Ok(())*/
         Ok(())
     }
 }
