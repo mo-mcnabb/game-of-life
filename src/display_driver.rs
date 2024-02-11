@@ -99,6 +99,18 @@ impl DisplayDriver {
 
         Ok(())
     }
+
+    pub fn turn_on_pixel(
+        &mut self,
+        board: &mut Vec<Vec<Pixel>>,
+        x: usize,
+        y: usize,
+        paused: bool,
+    ) -> Result<(), String> {
+        let on_color = if !paused { Color::WHITE } else { Color::RED };
+        board[y][x].turn_on();
+        Ok(())
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
