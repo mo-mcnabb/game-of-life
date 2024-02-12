@@ -1,10 +1,11 @@
 extern crate sdl2;
 use sdl2::pixels::Color;
 use sdl2::rect::{Point, Rect};
+use sdl2::render::BlendMode;
 use sdl2::render::TextureQuery;
 use sdl2::render::WindowCanvas;
 use sdl2::ttf::Sdl2TtfContext;
-use sdl2::{EventPump, Sdl};
+use sdl2::Sdl;
 
 const WIDTH: u32 = 800;
 const HEIGHT: u32 = 600;
@@ -87,7 +88,7 @@ impl DisplayDriver {
                 Point::new(WIDTH as i32, y_pos as i32),
             )?;
         }
-        self.canvas.present();
+
         Ok(())
     }
 
@@ -96,7 +97,10 @@ impl DisplayDriver {
         // yes i know theyre the same, this will be expanded out further later
         let off_color = if !paused { Color::BLACK } else { Color::BLACK };
         self.draw_board(board, on_color, off_color)?;
-
+        if paused {
+            self.draw_text("Paused", 24, Color::WHITE)?;
+        }
+        self.canvas.present();
         Ok(())
     }
 
@@ -107,8 +111,28 @@ impl DisplayDriver {
         y: usize,
         paused: bool,
     ) -> Result<(), String> {
-        let on_color = if !paused { Color::WHITE } else { Color::RED };
         board[y][x].turn_on();
+        Ok(())
+    }
+
+    pub fn draw_text(&mut self, text: &str, font_size: u16, color: Color) -> Result<(), String> {
+        let font = self.ttf_context.load_font("fonts/font2.ttf", font_size)?;
+        let surface = font
+            .render(text)
+            .blended(color)
+            .map_err(|e| e.to_string())?;
+        let texture_creator = self.canvas.texture_creator();
+        let mut texture = texture_creator
+            .create_texture_from_surface(&surface)
+            .map_err(|e| e.to_string())?;
+
+        texture.set_blend_mode(BlendMode::Blend);
+
+        let TextureQuery { width, height, .. } = texture.query();
+        let x = ((WIDTH / 2) - width) as i32;
+        let y = ((HEIGHT / 2) - height) as i32;
+        self.canvas
+            .copy(&texture, None, Some(Rect::new(x, y, width, height)))?;
         Ok(())
     }
 }

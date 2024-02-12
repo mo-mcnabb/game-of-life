@@ -46,7 +46,6 @@ fn main() -> Result<(), String> {
         if !paused {
             life.apply_rules();
         }
-        // The rest of the game loop goes here...
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 40));
     }
     Ok(())
